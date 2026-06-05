@@ -1,0 +1,614 @@
+
+    <html>
+    <head>
+        <title>AlphaLab Strategy Research Report</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 40px;
+                line-height: 1.6;
+                color: #222;
+            }
+            h1, h2, h3 {
+                color: #111;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-top: 20px;
+                margin-bottom: 30px;
+                font-size: 14px;
+            }
+            th, td {
+                border: 1px solid #ccc;
+                padding: 8px;
+                text-align: right;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            td:first-child, th:first-child {
+                text-align: left;
+            }
+            .metric-box {
+                background-color: #f8f8f8;
+                border-left: 5px solid #333;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border-left: 5px solid #e0a800;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .good {
+                background-color: #e8f5e9;
+                border-left: 5px solid #2e7d32;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            code {
+                background-color: #eee;
+                padding: 2px 5px;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>AlphaLab: Quantitative Strategy Research Report</h1>
+        <p><strong>Generated:</strong> 2026-06-05 15:24</p>
+
+        <h2>Project Summary</h2>
+        <p>
+            AlphaLab is a Python-based quantitative research project designed to test
+            mean-reversion trading signals on historical equity data. The system downloads
+            market data, engineers statistical features, runs backtests, applies transaction
+            costs, performs train/test validation, and ranks strategies using risk-adjusted
+            metrics.
+        </p>
+
+        <h2>Strategy Tested</h2>
+        <p>
+            The tested strategy is a <strong>mean-reversion strategy</strong>. It buys when
+            a stock's price falls significantly below its moving average, measured by a
+            rolling z-score, and exits when the price reverts back toward the average.
+        </p>
+
+        <p>
+            Signal formula:
+        </p>
+
+        <p>
+            <code>Z-Score = (Close Price - Rolling Moving Average) / Rolling Standard Deviation</code>
+        </p>
+
+        <h2>Validation Method</h2>
+        <p>
+            Each ticker was split into a training period and an out-of-sample testing period.
+            Strategy parameters were selected using only the training data, then evaluated
+            on unseen test data.
+        </p>
+
+        <ul>
+            <li>Training set: first 70% of the data</li>
+            <li>Test set: final 30% of the data</li>
+            <li>Transaction cost: 0.05% per trade event</li>
+            <li>Ranking metric: custom robust score using Sharpe, Sortino, profit factor, outperformance, drawdown, exposure, and trade count</li>
+        </ul>
+
+        <h2>Best Out-of-Sample Strategy</h2>
+
+        <div class="metric-box">
+            <h3>TSLA Mean-Reversion Strategy</h3>
+            <p><strong>Entry Z:</strong> -1.5</p>
+            <p><strong>Window:</strong> 20</p>
+            <p><strong>Strategy Return:</strong> 73.87%</p>
+            <p><strong>Buy-and-Hold Return:</strong> -3.61%</p>
+            <p><strong>Outperformance:</strong> 77.48%</p>
+            <p><strong>Sharpe Ratio:</strong> 1.20</p>
+            <p><strong>Sortino Ratio:</strong> 1.14</p>
+            <p><strong>Profit Factor:</strong> 1.45</p>
+            <p><strong>Max Drawdown:</strong> -43.36%</p>
+            <p><strong>Trades:</strong> 13</p>
+            <p><strong>Win Rate:</strong> 91.67%</p>
+            <p><strong>Exposure Time:</strong> 33.61%</p>
+        </div>
+
+        <div class="good">
+            <strong>Main Finding:</strong>
+            The best out-of-sample result came from TSLA, where the strategy
+            outperformed buy-and-hold during the test period.
+        </div>
+
+        <div class="warning">
+            <strong>Important Limitation:</strong>
+            The strategy still needs stronger risk controls. A high return does not automatically
+            mean the strategy is reliable, especially when max drawdown is large or the number of
+            trades is limited.
+        </div>
+
+        <h2>Out-of-Sample Test Results</h2>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Ticker</th>
+      <th>Entry Z</th>
+      <th>Window</th>
+      <th>Strategy Return</th>
+      <th>Buy Hold Return</th>
+      <th>Outperformance</th>
+      <th>Sharpe</th>
+      <th>Sortino</th>
+      <th>Profit Factor</th>
+      <th>Max Drawdown</th>
+      <th>Trades</th>
+      <th>Closed Trades</th>
+      <th>Win Rate</th>
+      <th>Avg Trade Return</th>
+      <th>Exposure Time</th>
+      <th>Return Per Exposure</th>
+      <th>Chosen From Training Entry Z</th>
+      <th>Chosen From Training Window</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TSLA</td>
+      <td>-1.5</td>
+      <td>20</td>
+      <td>0.738692</td>
+      <td>-0.036066</td>
+      <td>0.774758</td>
+      <td>1.196218</td>
+      <td>1.144996</td>
+      <td>1.450304</td>
+      <td>-0.433594</td>
+      <td>13</td>
+      <td>12</td>
+      <td>0.916667</td>
+      <td>0.056292</td>
+      <td>0.336134</td>
+      <td>2.197608</td>
+      <td>-1.5</td>
+      <td>20</td>
+      <td>7.213537</td>
+    </tr>
+    <tr>
+      <td>META</td>
+      <td>-1.0</td>
+      <td>20</td>
+      <td>0.257892</td>
+      <td>0.010323</td>
+      <td>0.247570</td>
+      <td>0.712026</td>
+      <td>0.728882</td>
+      <td>1.232867</td>
+      <td>-0.186502</td>
+      <td>15</td>
+      <td>14</td>
+      <td>0.642857</td>
+      <td>0.013100</td>
+      <td>0.394958</td>
+      <td>0.652962</td>
+      <td>-1.0</td>
+      <td>20</td>
+      <td>3.422750</td>
+    </tr>
+    <tr>
+      <td>NVDA</td>
+      <td>-1.5</td>
+      <td>10</td>
+      <td>0.298908</td>
+      <td>0.557095</td>
+      <td>-0.258186</td>
+      <td>0.757220</td>
+      <td>0.595766</td>
+      <td>1.325778</td>
+      <td>-0.269750</td>
+      <td>14</td>
+      <td>13</td>
+      <td>0.923077</td>
+      <td>0.020517</td>
+      <td>0.242507</td>
+      <td>1.232578</td>
+      <td>-1.5</td>
+      <td>10</td>
+      <td>2.888106</td>
+    </tr>
+    <tr>
+      <td>MSFT</td>
+      <td>-1.5</td>
+      <td>20</td>
+      <td>0.057964</td>
+      <td>-0.003525</td>
+      <td>0.061489</td>
+      <td>0.318368</td>
+      <td>0.313139</td>
+      <td>1.100785</td>
+      <td>-0.128773</td>
+      <td>9</td>
+      <td>9</td>
+      <td>0.666667</td>
+      <td>0.005798</td>
+      <td>0.341737</td>
+      <td>0.169617</td>
+      <td>-1.5</td>
+      <td>20</td>
+      <td>1.388893</td>
+    </tr>
+    <tr>
+      <td>GOOGL</td>
+      <td>-1.0</td>
+      <td>10</td>
+      <td>0.153379</td>
+      <td>0.862895</td>
+      <td>-0.709516</td>
+      <td>0.631905</td>
+      <td>0.631612</td>
+      <td>1.216394</td>
+      <td>-0.141632</td>
+      <td>18</td>
+      <td>17</td>
+      <td>0.764706</td>
+      <td>0.013657</td>
+      <td>0.297003</td>
+      <td>0.516422</td>
+      <td>-1.0</td>
+      <td>10</td>
+      <td>1.155279</td>
+    </tr>
+    <tr>
+      <td>SPY</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.056098</td>
+      <td>0.275195</td>
+      <td>-0.219097</td>
+      <td>0.348031</td>
+      <td>0.233842</td>
+      <td>1.171689</td>
+      <td>-0.104432</td>
+      <td>7</td>
+      <td>7</td>
+      <td>0.714286</td>
+      <td>0.008962</td>
+      <td>0.173669</td>
+      <td>0.323017</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>1.003217</td>
+    </tr>
+    <tr>
+      <td>AMZN</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.029640</td>
+      <td>0.125689</td>
+      <td>-0.096050</td>
+      <td>0.201672</td>
+      <td>0.173491</td>
+      <td>1.074833</td>
+      <td>-0.145985</td>
+      <td>7</td>
+      <td>6</td>
+      <td>0.666667</td>
+      <td>0.013921</td>
+      <td>0.226891</td>
+      <td>0.130634</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.638092</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>-1.5</td>
+      <td>50</td>
+      <td>0.044678</td>
+      <td>0.264475</td>
+      <td>-0.219797</td>
+      <td>0.259017</td>
+      <td>0.178372</td>
+      <td>1.111542</td>
+      <td>-0.229890</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0.666667</td>
+      <td>0.016704</td>
+      <td>0.253823</td>
+      <td>0.176022</td>
+      <td>-1.5</td>
+      <td>50</td>
+      <td>0.480830</td>
+    </tr>
+    <tr>
+      <td>AMD</td>
+      <td>-1.0</td>
+      <td>50</td>
+      <td>0.252390</td>
+      <td>3.118568</td>
+      <td>-2.866178</td>
+      <td>0.655117</td>
+      <td>0.706701</td>
+      <td>1.254314</td>
+      <td>-0.173112</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1.000000</td>
+      <td>0.076928</td>
+      <td>0.299694</td>
+      <td>0.842158</td>
+      <td>-1.0</td>
+      <td>50</td>
+      <td>-2.732797</td>
+    </tr>
+    <tr>
+      <td>QQQ</td>
+      <td>-1.5</td>
+      <td>10</td>
+      <td>-0.003664</td>
+      <td>0.321736</td>
+      <td>-0.325400</td>
+      <td>0.062094</td>
+      <td>0.047089</td>
+      <td>1.025005</td>
+      <td>-0.180515</td>
+      <td>12</td>
+      <td>11</td>
+      <td>0.636364</td>
+      <td>0.001122</td>
+      <td>0.239782</td>
+      <td>-0.015281</td>
+      <td>-1.5</td>
+      <td>10</td>
+      <td>-999.000000</td>
+    </tr>
+  </tbody>
+</table>
+
+        <h2>Top Training Results</h2>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Ticker</th>
+      <th>Entry Z</th>
+      <th>Window</th>
+      <th>Strategy Return</th>
+      <th>Buy Hold Return</th>
+      <th>Outperformance</th>
+      <th>Sharpe</th>
+      <th>Sortino</th>
+      <th>Profit Factor</th>
+      <th>Max Drawdown</th>
+      <th>Trades</th>
+      <th>Closed Trades</th>
+      <th>Win Rate</th>
+      <th>Avg Trade Return</th>
+      <th>Exposure Time</th>
+      <th>Return Per Exposure</th>
+      <th>Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MSFT</td>
+      <td>-1.5</td>
+      <td>20</td>
+      <td>0.867986</td>
+      <td>0.598467</td>
+      <td>0.269519</td>
+      <td>1.166342</td>
+      <td>1.005909</td>
+      <td>1.449957</td>
+      <td>-0.131696</td>
+      <td>25</td>
+      <td>25</td>
+      <td>0.840000</td>
+      <td>0.026982</td>
+      <td>0.277066</td>
+      <td>3.132774</td>
+      <td>7.241198</td>
+    </tr>
+    <tr>
+      <td>MSFT</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.732236</td>
+      <td>0.598467</td>
+      <td>0.133768</td>
+      <td>1.134396</td>
+      <td>0.859291</td>
+      <td>1.514555</td>
+      <td>-0.131696</td>
+      <td>17</td>
+      <td>17</td>
+      <td>0.764706</td>
+      <td>0.034944</td>
+      <td>0.204889</td>
+      <td>3.573809</td>
+      <td>7.216372</td>
+    </tr>
+    <tr>
+      <td>GOOGL</td>
+      <td>-1.0</td>
+      <td>10</td>
+      <td>0.637207</td>
+      <td>0.431298</td>
+      <td>0.205909</td>
+      <td>0.827129</td>
+      <td>0.754102</td>
+      <td>1.261239</td>
+      <td>-0.192133</td>
+      <td>49</td>
+      <td>49</td>
+      <td>0.775510</td>
+      <td>0.011554</td>
+      <td>0.340621</td>
+      <td>1.870719</td>
+      <td>4.814074</td>
+    </tr>
+    <tr>
+      <td>MSFT</td>
+      <td>-1.0</td>
+      <td>20</td>
+      <td>0.585553</td>
+      <td>0.598467</td>
+      <td>-0.012914</td>
+      <td>0.841424</td>
+      <td>0.767035</td>
+      <td>1.282525</td>
+      <td>-0.164784</td>
+      <td>28</td>
+      <td>28</td>
+      <td>0.750000</td>
+      <td>0.018239</td>
+      <td>0.314319</td>
+      <td>1.862927</td>
+      <td>4.442831</td>
+    </tr>
+    <tr>
+      <td>META</td>
+      <td>-1.0</td>
+      <td>20</td>
+      <td>0.682591</td>
+      <td>0.676389</td>
+      <td>0.006202</td>
+      <td>0.692418</td>
+      <td>0.615514</td>
+      <td>1.248686</td>
+      <td>-0.321208</td>
+      <td>27</td>
+      <td>27</td>
+      <td>0.777778</td>
+      <td>0.022588</td>
+      <td>0.299185</td>
+      <td>2.281499</td>
+      <td>4.285218</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>-1.5</td>
+      <td>50</td>
+      <td>0.490518</td>
+      <td>0.613751</td>
+      <td>-0.123234</td>
+      <td>0.810453</td>
+      <td>0.649505</td>
+      <td>1.295910</td>
+      <td>-0.158242</td>
+      <td>11</td>
+      <td>11</td>
+      <td>0.818182</td>
+      <td>0.038867</td>
+      <td>0.271411</td>
+      <td>1.807285</td>
+      <td>3.996964</td>
+    </tr>
+    <tr>
+      <td>GOOGL</td>
+      <td>-1.5</td>
+      <td>10</td>
+      <td>0.459448</td>
+      <td>0.431298</td>
+      <td>0.028150</td>
+      <td>0.703681</td>
+      <td>0.571610</td>
+      <td>1.246224</td>
+      <td>-0.210600</td>
+      <td>36</td>
+      <td>36</td>
+      <td>0.750000</td>
+      <td>0.012243</td>
+      <td>0.272727</td>
+      <td>1.684643</td>
+      <td>3.820871</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.406318</td>
+      <td>0.745037</td>
+      <td>-0.338720</td>
+      <td>0.783988</td>
+      <td>0.534496</td>
+      <td>1.337119</td>
+      <td>-0.175481</td>
+      <td>15</td>
+      <td>15</td>
+      <td>0.800000</td>
+      <td>0.024747</td>
+      <td>0.200233</td>
+      <td>2.029226</td>
+      <td>3.613058</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>-1.0</td>
+      <td>50</td>
+      <td>0.492920</td>
+      <td>0.613751</td>
+      <td>-0.120831</td>
+      <td>0.762719</td>
+      <td>0.679331</td>
+      <td>1.251963</td>
+      <td>-0.173067</td>
+      <td>15</td>
+      <td>15</td>
+      <td>0.866667</td>
+      <td>0.028870</td>
+      <td>0.328106</td>
+      <td>1.502318</td>
+      <td>3.605347</td>
+    </tr>
+    <tr>
+      <td>SPY</td>
+      <td>-2.0</td>
+      <td>20</td>
+      <td>0.297571</td>
+      <td>0.459116</td>
+      <td>-0.161545</td>
+      <td>0.781486</td>
+      <td>0.547995</td>
+      <td>1.312268</td>
+      <td>-0.092295</td>
+      <td>16</td>
+      <td>16</td>
+      <td>0.937500</td>
+      <td>0.017646</td>
+      <td>0.210710</td>
+      <td>1.412231</td>
+      <td>3.435881</td>
+    </tr>
+  </tbody>
+</table>
+
+        <h2>Interpretation</h2>
+        <p>
+            The results suggest that the mean-reversion signal performs better on volatile
+            individual stocks than on broad market ETFs. TSLA produced the strongest out-of-sample
+            result, while SPY and QQQ were weaker. This suggests the strategy is not universal and
+            may depend heavily on volatility, ticker behavior, and market regime.
+        </p>
+
+        <h2>Next Research Improvements</h2>
+        <ul>
+            <li>Add stop-loss and take-profit rules</li>
+            <li>Add volatility-based position sizing</li>
+            <li>Test more tickers and longer time periods</li>
+            <li>Add walk-forward validation</li>
+            <li>Compare against random-entry baseline strategies</li>
+            <li>Test whether results remain after higher transaction costs and slippage</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>
+            AlphaLab demonstrates the full quant research workflow: hypothesis generation,
+            data collection, feature engineering, backtesting, train/test validation, performance
+            measurement, and honest evaluation of limitations.
+        </p>
+    </body>
+    </html>
+    
