@@ -1,4 +1,7 @@
 # AlphaLab: Quantitative Strategy Research Engine
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://alphalab-bpencwgdf4nneibfxfrwhn.streamlit.app/)
+
+Live dashboard: https://alphalab-bpencwgdf4nneibfxfrwhn.streamlit.app/
 
 AlphaLab is a Python-based quantitative research project that tests mean-reversion trading strategies on historical equity data.
 
